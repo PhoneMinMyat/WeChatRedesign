@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "789578657510",
+    "project_id": "wechat-redesign",
+    "storage_bucket": "wechat-redesign.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:789578657510:android:f628c66dc2600145625527",
+        "android_client_info": {
+          "package_name": "com.pmm.wechat_redesign"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "789578657510-01lusjhjfgcv8s52jtuphpvr3f9aknm3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjm_EbRS6XNOLH0kxu0P-0tB60vKS3SqQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "789578657510-01lusjhjfgcv8s52jtuphpvr3f9aknm3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
