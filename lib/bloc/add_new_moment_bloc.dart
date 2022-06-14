@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flick_video_player/flick_video_player.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:video_player/video_player.dart';
 import 'package:wechat_redesign/data/models/wechat_model.dart';
@@ -29,7 +28,6 @@ class AddNewMomentBloc extends ChangeNotifier {
   String? fileUrl;
   bool? isFileTypeVideo;
   MomentVO? momentVO;
-  FlickManager? flickManager;
 
   final WeChatModel model = WeChatModelImpl();
 
@@ -43,7 +41,7 @@ class AddNewMomentBloc extends ChangeNotifier {
   }
 
   Future<void> onTapPost() {
-    if (momentDescription.isEmpty) {
+    if (momentDescription.isEmpty && choseFile == null) {
       isEmptyDescriptionError = true;
       safeNotifyListeners();
       return Future.error('error');
@@ -74,26 +72,23 @@ class AddNewMomentBloc extends ChangeNotifier {
     momentVO?.description = momentDescription;
     if (fileUrl == null) {
       momentVO?.postImageUrl = '';
+      momentVO?.isFileTypeVideo = false;
     }
     if (momentVO != null) {
       return model.editNewMoment(
-          momentVO!, choseFile, isFileTypeVideo ?? false);
+          momentVO!, choseFile);
     } else {
       return Future.error('error');
     }
   }
 
   void onImageChosen(File choseFile, String extension) async {
-    await flickManager?.flickControlManager?.autoPause();
     this.choseFile = choseFile;
     checkIsVideo(extension);
-
-    craftFlickManager();
     safeNotifyListeners();
   }
 
   void onTapDeleteImage() async {
-    await flickManager?.flickControlManager?.autoPause();
     choseFile = null;
     fileUrl = null;
     isFileTypeVideo = null;
@@ -119,20 +114,11 @@ class AddNewMomentBloc extends ChangeNotifier {
       fileUrl = moment.postImageUrl ?? '';
       isFileTypeVideo = moment.isFileTypeVideo ?? false;
       momentVO = moment;
-      craftFlickManager();
       safeNotifyListeners();
     });
   }
 
-  void craftFlickManager() {
-    if (isFileTypeVideo ?? false) {
-      flickManager = FlickManager(
-          videoPlayerController: (fileUrl == null || (fileUrl?.isEmpty ?? true))
-              ? VideoPlayerController.file(choseFile ?? File(''))
-              : VideoPlayerController.network(fileUrl ?? ''),
-          autoPlay: false);
-    }
-  }
+  
 
   void onTextChanged(newText) {
     momentDescription = newText;
@@ -152,7 +138,6 @@ class AddNewMomentBloc extends ChangeNotifier {
   @override
   void dispose() {
     isDisposed = true;
-    flickManager?.dispose();
     super.dispose();
   }
 }

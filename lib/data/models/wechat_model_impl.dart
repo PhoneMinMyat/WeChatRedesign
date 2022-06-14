@@ -50,7 +50,7 @@ class WeChatModelImpl extends WeChatModel {
   }
 
   @override
-  Future<void> editNewMoment(MomentVO moment, File? file, bool isVideo) {
+  Future<void> editNewMoment(MomentVO moment, File? file) {
     if (file != null) {
       return dataAgent.uploadFileToFirebase(file).then((fileUrl) {
         MomentVO tempPost = moment;

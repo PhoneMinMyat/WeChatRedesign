@@ -9,6 +9,7 @@ const kMarginXLarge = 32.0;
 const kMarginXXLarge = 48.0;
 
 const kTextSmall = 10.0;
+const kTextSmall2 = 12.0;
 const kTextRegular = 14.0;
 const kTextRegular2X = 16.0;
 const kTextRegular3x = 20.0;
@@ -26,7 +27,7 @@ const kUserActionGroupHeight = 100.0;
 const kContactItemHeight = 80.0;
 const kAddMessagePopUpHeight = 90.0;
 const kAddMessagePopUpWidth = 300.0;
-const kAddNewMomentTextFieldHeight = 100.0;
+const kAddNewMomentTextFieldHeight = 150.0;
 const kHorizontalIconAndLabelViewHeight = 40.0;
 
 const kMomentMediaHeight = 200.0;

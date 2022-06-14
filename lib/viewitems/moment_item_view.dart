@@ -1,22 +1,25 @@
-import 'package:flick_video_player/flick_video_player.dart';
+
 import 'package:flutter/material.dart';
-import 'package:video_player/video_player.dart';
 import 'package:wechat_redesign/data/vos/moment_vo.dart';
 import 'package:wechat_redesign/resources/dimens.dart';
 import 'package:wechat_redesign/resources/text_styles.dart';
 import 'package:wechat_redesign/viewitems/media_view.dart';
+
+import 'moment_action_view.dart';
 
 class MomentItemView extends StatelessWidget {
   final MomentVO moment;
   final Function(int) onTapEdit;
   final Function(int) onTapDelete;
   final Function(int) onAddComment;
+  final Function onTapMomentDetails;
   const MomentItemView({
     Key? key,
     required this.moment,
     required this.onTapEdit,
     required this.onTapDelete,
     required this.onAddComment,
+    required this.onTapMomentDetails,
   }) : super(key: key);
 
   @override
@@ -30,11 +33,21 @@ class MomentItemView extends StatelessWidget {
             profileUrl: moment.profilePicUrl ?? '',
             userName: moment.userName ?? '',
           ),
-          CaptionView(
-            caption: moment.description ?? '',
+          GestureDetector(
+            onTap: () {
+              onTapMomentDetails();
+            },
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CaptionView(
+                  caption: moment.description ?? '',
+                ),
+                const SizedBox(height: kMarginMedium),
+                MomentMediaView(moment: moment),
+              ],
+            ),
           ),
-          const SizedBox(height: kMarginMedium),
-          MomentMediaView(moment: moment),
           const SizedBox(height: kMarginMedium),
           MomentActionView(
             isUserPost: moment.isUserMoment ?? false,
@@ -46,12 +59,16 @@ class MomentItemView extends StatelessWidget {
             },
           ),
           const SizedBox(height: kMarginMedium),
-          const GreyLineSeparator(),
-          LikeViewAndCommentSectionView(
-            onAddComment: () {
-              onAddComment(moment.id ?? 0);
-            },
-          )
+          Column(
+            children: [
+              const GreyLineSeparator(),
+              LikeViewAndCommentSectionView(
+                onAddComment: () {
+                  onAddComment(moment.id ?? 0);
+                },
+              )
+            ],
+          ),
         ],
       ),
     );
@@ -70,7 +87,6 @@ class MomentMediaView extends StatelessWidget {
   Widget build(BuildContext context) {
     return (moment.postImageUrl?.isNotEmpty ?? false)
         ? Container(
-          
             width: double.infinity,
             height: kMomentMediaHeight,
             margin: const EdgeInsets.symmetric(vertical: kMarginMedium2),
@@ -78,10 +94,7 @@ class MomentMediaView extends StatelessWidget {
             child: MediaView(
               isVideo: moment.isFileTypeVideo ?? false,
               mediaUrl: moment.postImageUrl,
-              flickManager: FlickManager(
-                  videoPlayerController:
-                      VideoPlayerController.network(moment.postImageUrl ?? ''),
-                  autoPlay: false),
+             
             ),
           )
         : Container();
@@ -184,79 +197,9 @@ class GreyLineSeparator extends StatelessWidget {
   }
 }
 
-class MomentActionView extends StatelessWidget {
-  final bool isUserPost;
-  final Function onTapEdit;
-  final Function onTapDelete;
-  const MomentActionView({
-    required this.isUserPost,
-    Key? key,
-    required this.onTapEdit,
-    required this.onTapDelete,
-  }) : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: kMarginMedium2),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          const Icon(
-            Icons.favorite,
-            color: Colors.red,
-          ),
-          const SizedBox(
-            width: kMarginMedium,
-          ),
-          const Icon(Icons.message_outlined),
-          (isUserPost)
-              ? MoreButtonView(
-                  onTapEdit: () {
-                    onTapEdit();
-                  },
-                  onTapDelete: () {
-                    onTapDelete();
-                  },
-                )
-              : Container(),
-        ],
-      ),
-    );
-  }
-}
 
-class MoreButtonView extends StatelessWidget {
-  final Function onTapEdit;
-  final Function onTapDelete;
-  const MoreButtonView(
-      {Key? key, required this.onTapEdit, required this.onTapDelete})
-      : super(key: key);
 
-  @override
-  Widget build(BuildContext context) {
-    return PopupMenuButton(
-      padding: EdgeInsets.zero,
-      icon: const Icon(Icons.more_horiz_rounded),
-      itemBuilder: (context) => [
-        PopupMenuItem(
-          onTap: () {
-            onTapEdit();
-          },
-          value: 1,
-          child: const Text("Edit"),
-        ),
-        PopupMenuItem(
-          onTap: () {
-            onTapDelete();
-          },
-          value: 2,
-          child: const Text("Delete"),
-        )
-      ],
-    );
-  }
-}
 
 class CaptionView extends StatelessWidget {
   final String caption;
@@ -272,6 +215,8 @@ class CaptionView extends StatelessWidget {
           const EdgeInsets.only(left: kMarginXXLarge, right: kMarginMedium2),
       child: Text(
         caption,
+        maxLines: 5,
+        overflow: TextOverflow.ellipsis,
         style: kMomentRegularTextStyle,
       ),
     );

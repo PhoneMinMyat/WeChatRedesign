@@ -28,15 +28,21 @@ class AddMomentPage extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     // mainAxisSize: MainAxisSize.max,
-                    children: const [
-                      SpaceForAppBar(),
-                      Padding(
+                    children: [
+                      const SpaceForAppBar(),
+                      const Padding(
                         padding: EdgeInsets.all(kMarginMedium2),
                         child: UserProfileAndNameView(),
                       ),
-                      AddNewMomentTextFieldView(),
-                      PostDescriptionErrorView(),
-                      PostFileView(),
+                      const AddNewMomentTextFieldView(),
+                      const PostDescriptionErrorView(),
+                      const PostFileView(),
+                      Visibility(
+                        visible: bloc.isExpanded,
+                        child: const SizedBox(
+                          height: 300,
+                        ),
+                      )
                     ],
                   ),
                 ),
@@ -208,19 +214,19 @@ class PostFileView extends StatelessWidget {
     return Consumer<AddNewMomentBloc>(
       builder: (context, bloc, child) => SizedBox(
         width: double.infinity,
-        height: 300,
+        height: (bloc.choseFile == null &&
+                (bloc.fileUrl == null && (bloc.fileUrl?.isEmpty ?? true)))
+            ? 0
+            : 300,
         child: Stack(
           children: [
             Positioned.fill(
               child: (bloc.choseFile == null)
                   ? Container(
-                      child: (bloc.isEditMode &&
-                              (bloc.fileUrl != null ||
-                                  (bloc.fileUrl?.isNotEmpty ?? false)))
+                      child: (bloc.isEditMode)
                           ? MediaView(
                               isVideo: bloc.isFileTypeVideo ?? false,
                               mediaUrl: bloc.fileUrl,
-                              flickManager: bloc.flickManager,
                             )
                           : Container(),
                     )
@@ -231,7 +237,6 @@ class PostFileView extends StatelessWidget {
                         child: MediaView(
                           isVideo: bloc.isFileTypeVideo ?? false,
                           mediaFile: bloc.choseFile,
-                          flickManager: bloc.flickManager,
                         ),
                       ),
                     ),

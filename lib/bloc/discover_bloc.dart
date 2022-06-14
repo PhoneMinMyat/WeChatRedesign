@@ -6,6 +6,10 @@ import 'package:wechat_redesign/data/vos/moment_vo.dart';
 class DiscoverBloc extends ChangeNotifier {
   bool isDisposed = false;
   List<MomentVO>? momentList;
+  bool isAddCommentShow = false;
+  bool isMomentDetailsShow = false;
+
+  MomentVO? choseMomentToShowDetails;
 
   final WeChatModel model = WeChatModelImpl();
 
@@ -21,7 +25,27 @@ class DiscoverBloc extends ChangeNotifier {
     });
   }
 
-  Future onTapPostDelete(int momentId){
+  void onTapAddComment(int momentId) {
+    isAddCommentShow = true;
+    safeNotifyListeners();
+  }
+
+  void onTapMomentDetails(MomentVO selectMoment) {
+    isMomentDetailsShow = true;
+    choseMomentToShowDetails = selectMoment;
+    safeNotifyListeners();
+  }
+
+  void onTapCloseMomentDetails(){
+    isMomentDetailsShow = false;
+    choseMomentToShowDetails = null;
+    safeNotifyListeners();
+  }
+
+  Future onTapPostDelete(int momentId) {
+    isMomentDetailsShow = false;
+    choseMomentToShowDetails = null;
+    safeNotifyListeners();
     return model.deleteMoment(momentId);
   }
 
