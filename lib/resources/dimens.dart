@@ -30,4 +30,14 @@ const kAddMessagePopUpWidth = 300.0;
 const kAddNewMomentTextFieldHeight = 150.0;
 const kHorizontalIconAndLabelViewHeight = 40.0;
 
-const kMomentMediaHeight = 200.0;
+const kMomentMediaHeight = 170.0;
+
+const kLogOutButtonWidth = 200.0;
+const kLogOutButtonHeight = 50.0;
+
+const kPrimaryButtonWidth = 170.0;
+const kPrimaryButtonHeight = 45.0;
+
+const kModalBottomSheetHeight = 50.0;
+
+const kProfileInputWeight = 50.0;

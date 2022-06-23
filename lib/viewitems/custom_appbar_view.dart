@@ -7,8 +7,9 @@ class CustomAppBarView extends StatelessWidget {
   final String title;
   final Widget? leading;
   final Widget? action;
+  final bool isChatPage;
   const CustomAppBarView(
-      {Key? key, required this.title, this.leading, this.action})
+      {Key? key, required this.title, this.leading, this.action, this.isChatPage = false})
       : super(key: key);
 
   @override
@@ -20,7 +21,7 @@ class CustomAppBarView extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(
             top: MediaQuery.of(context).viewPadding.top,
-            left: kMarginMedium2,
+            left:(isChatPage)? kMarginSmall : kMarginMedium2,
             right: kMarginMedium2),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,

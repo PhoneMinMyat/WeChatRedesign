@@ -3,30 +3,36 @@ import 'package:wechat_redesign/resources/dimens.dart';
 
 class ContactAndChatItemView extends StatelessWidget {
   final bool isMessageView;
+  final String userName;
+  final String? lastMessage;
+  final String profilePictureUrl;
   const ContactAndChatItemView({
     Key? key,
     this.isMessageView = false,
+    required this.userName,
+    this.lastMessage,
+    required this.profilePictureUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      color: Colors.white,
       width: double.infinity,
       height: kContactItemHeight,
-      padding: const EdgeInsets.only(
-          left: kMarginMedium3, top: kMarginMedium2),
+      padding: const EdgeInsets.only(left: kMarginMedium3, top: kMarginMedium2),
       child: Row(
         children: [
-          const CircleAvatar(
+          CircleAvatar(
             minRadius: 30,
-            backgroundImage: NetworkImage(
-                'https://media.istockphoto.com/photos/millennial-male-team-leader-organize-virtual-workshop-with-employees-picture-id1300972574?b=1&k=20&m=1300972574&s=170667a&w=0&h=2nBGC7tr0kWIU8zRQ3dMg-C5JLo9H2sNUuDjQ5mlYfo='),
+            backgroundImage: NetworkImage(profilePictureUrl),
           ),
           const SizedBox(
             width: kMarginMedium,
           ),
           Expanded(
             child: Container(
+              padding: (isMessageView)? EdgeInsets.only(top: kMarginMedium) : EdgeInsets.zero,
               width: double.infinity,
               decoration: const BoxDecoration(
                 border: Border(
@@ -41,28 +47,28 @@ class ContactAndChatItemView extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Text(
-                        'Alex Deane',
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                      Text(
+                        userName,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       (isMessageView)
-                          ?const Padding(
-                            padding:  EdgeInsets.only(right: kMarginMedium2),
-                            child:  Text(
+                          ? const Padding(
+                              padding: EdgeInsets.only(right: kMarginMedium2),
+                              child: Text(
                                 '12/08/22',
                                 style: TextStyle(
                                     color: Colors.grey, fontSize: kTextRegular),
                               ),
-                          )
+                            )
                           : Container()
                     ],
                   ),
                   const SizedBox(
                     height: kMarginSmall,
                   ),
-                  const Text(
-                    'Cathay Pacific Airways Limited',
+                  Text(
+                    lastMessage ?? '',
                     style: TextStyle(color: Colors.grey, fontSize: kTextSmall),
                   )
                 ],

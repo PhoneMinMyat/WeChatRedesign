@@ -13,6 +13,7 @@ MomentVO _$MomentVOFromJson(Map<String, dynamic> json) => MomentVO(
       isFileTypeVideo: json['is_file_type_video'] as bool?,
       profilePicUrl: json['profile_url'] as String?,
       userName: json['user_name'] as String?,
+      userId: json['user_id'] as String?,
       isUserMoment: json['isUserMoment'] as bool?,
     );
 
@@ -23,5 +24,6 @@ Map<String, dynamic> _$MomentVOToJson(MomentVO instance) => <String, dynamic>{
       'is_file_type_video': instance.isFileTypeVideo,
       'profile_url': instance.profilePicUrl,
       'user_name': instance.userName,
+      'user_id': instance.userId,
       'isUserMoment': instance.isUserMoment,
     };

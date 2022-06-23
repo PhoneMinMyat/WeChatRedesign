@@ -43,7 +43,6 @@ class MomentItemView extends StatelessWidget {
                 CaptionView(
                   caption: moment.description ?? '',
                 ),
-                const SizedBox(height: kMarginMedium),
                 MomentMediaView(moment: moment),
               ],
             ),
@@ -88,7 +87,10 @@ class MomentMediaView extends StatelessWidget {
     return (moment.postImageUrl?.isNotEmpty ?? false)
         ? Container(
             width: double.infinity,
-            height: kMomentMediaHeight,
+            constraints: BoxConstraints(
+              maxHeight: 225
+            ),
+            
             margin: const EdgeInsets.symmetric(vertical: kMarginMedium2),
             padding: const EdgeInsets.symmetric(horizontal: kMarginMedium2),
             child: MediaView(

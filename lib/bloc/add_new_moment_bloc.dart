@@ -1,7 +1,8 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:video_player/video_player.dart';
+import 'package:wechat_redesign/data/models/authentication_model.dart';
+import 'package:wechat_redesign/data/models/authentication_model_impl.dart';
 import 'package:wechat_redesign/data/models/wechat_model.dart';
 import 'package:wechat_redesign/data/models/wechat_model_impl.dart';
 import 'package:wechat_redesign/data/vos/moment_vo.dart';
@@ -13,7 +14,7 @@ class AddNewMomentBloc extends ChangeNotifier {
   bool isDisposed = false;
   bool isEmptyDescriptionError = false;
   bool isExpanded = true;
-  String profilePicUrl = '';
+  String profilePicUrl = NETWORK_PROFILE_PLACEHOLDER;
   String userName = '';
   String momentDescription = '';
   List<String> videoFormatList = [
@@ -30,13 +31,14 @@ class AddNewMomentBloc extends ChangeNotifier {
   MomentVO? momentVO;
 
   final WeChatModel model = WeChatModelImpl();
+  final AuthenticationModel authenticationModel = AuthenticationModelImpl();
 
-  AddNewMomentBloc(int? editMomentId) {
-    if (editMomentId == null) {
+  AddNewMomentBloc(MomentVO? editMoment) {
+    if (editMoment == null) {
       prepopulateDataForAddMode();
     } else {
       isEditMode = true;
-      prepopulateDataForEditMode(editMomentId);
+      prepopulateDataForEditMode(editMoment);
     }
   }
 
@@ -70,13 +72,13 @@ class AddNewMomentBloc extends ChangeNotifier {
 
   Future<void> editMoment() {
     momentVO?.description = momentDescription;
-    if (fileUrl == null) {
+    momentVO?.isFileTypeVideo = isFileTypeVideo;
+    if (choseFile == null) {
       momentVO?.postImageUrl = '';
       momentVO?.isFileTypeVideo = false;
     }
     if (momentVO != null) {
-      return model.editNewMoment(
-          momentVO!, choseFile);
+      return model.editNewMoment(momentVO!, choseFile);
     } else {
       return Future.error('error');
     }
@@ -98,30 +100,45 @@ class AddNewMomentBloc extends ChangeNotifier {
 
   void checkIsVideo(String extension) {
     isFileTypeVideo = videoFormatList.contains(extension.toLowerCase());
+    print('Check Video ====> $isFileTypeVideo');
   }
 
   void prepopulateDataForAddMode() {
-    userName = 'Phone Min Myat';
-    profilePicUrl = tempProfileLink;
-    safeNotifyListeners();
-  }
-
-  void prepopulateDataForEditMode(int momentId) {
-    model.getMomentById(momentId).listen((moment) {
-      userName = moment.userName ?? '';
-      profilePicUrl = moment.profilePicUrl ?? '';
-      momentDescription = moment.description ?? '';
-      fileUrl = moment.postImageUrl ?? '';
-      isFileTypeVideo = moment.isFileTypeVideo ?? false;
-      momentVO = moment;
+    authenticationModel.getLoggedInUser().then((user) {
+      userName = user.userName ?? '';
+      profilePicUrl = user.profilePictureUrl ?? '';
       safeNotifyListeners();
     });
   }
 
-  
+  void prepopulateDataForEditMode(MomentVO editMoment) {
+    // model.getMomentById(momentId).listen((moment) {
+    //   userName = moment.userName ?? '';
+    //   profilePicUrl = moment.profilePicUrl ?? '';
+    //   momentDescription = moment.description ?? '';
+    //   fileUrl = moment.postImageUrl ?? '';
+    //   isFileTypeVideo = moment.isFileTypeVideo;
+    //   momentVO = moment;
+    //   print('Edited ====> moment ${momentVO.toString()}');
+    //   safeNotifyListeners();
+    // });
+
+    userName = editMoment.userName ?? '';
+    profilePicUrl = editMoment.profilePicUrl ?? '';
+    momentDescription = editMoment.description ?? '';
+    fileUrl = editMoment.postImageUrl ?? '';
+    isFileTypeVideo = editMoment.isFileTypeVideo;
+    momentVO = editMoment;
+    safeNotifyListeners();
+  }
 
   void onTextChanged(newText) {
     momentDescription = newText;
+  }
+
+  void onFocusTextField(){
+    isExpanded = false;
+    safeNotifyListeners();
   }
 
   void onTapExpanded() {

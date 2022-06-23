@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:wechat_redesign/bloc/add_new_moment_bloc.dart';
+import 'package:wechat_redesign/data/vos/moment_vo.dart';
 import 'package:wechat_redesign/resources/dimens.dart';
 import 'package:wechat_redesign/resources/strings.dart';
 import 'package:wechat_redesign/viewitems/custom_appbar_view.dart';
@@ -13,7 +14,7 @@ import 'package:wechat_redesign/widgets/loading_view.dart';
 import 'package:wechat_redesign/widgets/space_for_app_bar.dart';
 
 class AddMomentPage extends StatelessWidget {
-  final int? editMomentId;
+  final MomentVO? editMomentId;
   const AddMomentPage({Key? key, this.editMomentId}) : super(key: key);
 
   @override
@@ -122,82 +123,80 @@ class PostAttachSectionView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      child: SizedBox(
-        height: (isExpanded) ? null : kHorizontalIconAndLabelViewHeight * 2,
-        child: SingleChildScrollView(
-          physics: const NeverScrollableScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  onTapExpanded();
-                },
-                child: SizedBox(
-                  height: kHorizontalIconAndLabelViewHeight,
-                  child: Icon(
-                    (isExpanded) ? MdiIcons.menuDown : MdiIcons.menuUp,
-                    color: Colors.black54,
-                  ),
+    return SizedBox(
+      height: (isExpanded) ? null : kHorizontalIconAndLabelViewHeight * 2,
+      child: SingleChildScrollView(
+        physics: const NeverScrollableScrollPhysics(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            GestureDetector(
+              onTap: () {
+                onTapExpanded();
+              },
+              child: SizedBox(
+                height: kHorizontalIconAndLabelViewHeight,
+                child: Icon(
+                  (isExpanded) ? MdiIcons.menuDown : MdiIcons.menuUp,
+                  color: Colors.black54,
                 ),
               ),
-              GestureDetector(
-                onTap: () {
-                  onTapPhotoAndVideo();
-                },
-                child: const HorizontalIconAndLabelView(
-                  icon: Icon(
-                    Icons.photo,
-                    color: Colors.green,
-                  ),
-                  text: 'Photo/Video',
-                ),
-              ),
-              const HorizontalIconAndLabelView(
+            ),
+            GestureDetector(
+              onTap: () {
+                onTapPhotoAndVideo();
+              },
+              child: const HorizontalIconAndLabelView(
                 icon: Icon(
-                  Icons.person,
-                  color: Colors.blue,
-                ),
-                text: 'Tag People',
-              ),
-              const HorizontalIconAndLabelView(
-                icon: Icon(
-                  Icons.emoji_emotions,
-                  color: Colors.orange,
-                ),
-                text: 'Emoji',
-              ),
-              const HorizontalIconAndLabelView(
-                icon: Icon(
-                  Icons.pin_drop,
-                  color: Colors.deepOrange,
-                ),
-                text: 'Location',
-              ),
-              const HorizontalIconAndLabelView(
-                icon: Icon(
-                  Icons.video_camera_front,
-                  color: Colors.red,
-                ),
-                text: 'Live Video',
-              ),
-              const HorizontalIconAndLabelView(
-                icon: Icon(
-                  Icons.font_download,
+                  Icons.photo,
                   color: Colors.green,
                 ),
-                text: 'Background Color',
+                text: 'Photo/Video',
               ),
-              const HorizontalIconAndLabelView(
-                icon: Icon(
-                  Icons.camera_alt,
-                  color: Colors.blue,
-                ),
-                text: 'Camera',
+            ),
+            const HorizontalIconAndLabelView(
+              icon: Icon(
+                Icons.person,
+                color: Colors.blue,
               ),
-            ],
-          ),
+              text: 'Tag People',
+            ),
+            const HorizontalIconAndLabelView(
+              icon: Icon(
+                Icons.emoji_emotions,
+                color: Colors.orange,
+              ),
+              text: 'Emoji',
+            ),
+            const HorizontalIconAndLabelView(
+              icon: Icon(
+                Icons.pin_drop,
+                color: Colors.deepOrange,
+              ),
+              text: 'Location',
+            ),
+            const HorizontalIconAndLabelView(
+              icon: Icon(
+                Icons.video_camera_front,
+                color: Colors.red,
+              ),
+              text: 'Live Video',
+            ),
+            const HorizontalIconAndLabelView(
+              icon: Icon(
+                Icons.font_download,
+                color: Colors.green,
+              ),
+              text: 'Background Color',
+            ),
+            const HorizontalIconAndLabelView(
+              icon: Icon(
+                Icons.camera_alt,
+                color: Colors.blue,
+              ),
+              text: 'Camera',
+            ),
+          ],
         ),
       ),
     );
@@ -338,6 +337,9 @@ class AddNewMomentTextFieldView extends StatelessWidget {
           controller: TextEditingController(text: bloc.momentDescription),
           onChanged: (text) {
             bloc.onTextChanged(text);
+          },
+          onTap: () {
+            bloc.onFocusTextField();
           },
           decoration: const InputDecoration(
             hintText: "What's on your mind?",

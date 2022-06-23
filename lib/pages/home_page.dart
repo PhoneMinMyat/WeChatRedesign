@@ -2,25 +2,44 @@ import 'package:flutter/material.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:wechat_redesign/pages/contacts_view.dart';
 import 'package:wechat_redesign/pages/discover_view.dart';
-import 'package:wechat_redesign/pages/message_list_view.dart';
+import 'package:wechat_redesign/pages/wechat_message_list_view.dart';
 import 'package:wechat_redesign/pages/profile_view.dart';
 import 'package:wechat_redesign/resources/colors.dart';
 
+enum PageName {
+  weChatMessageView,
+  contactsView,
+  discoverView,
+  profileView,
+}
+
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  final PageName? sentPage;
+  const HomePage({Key? key, this.sentPage}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+
+  
+
   int pageIndex = 0;
   List<Widget> pageList = [
-    const MessageListView(),
+    const WeChatMessageView(),
     const ContactsView(),
     const DiscoverView(),
     const ProfileView()
   ];
+
+  @override
+  void initState() {
+    if(widget.sentPage != null){
+      pageIndex = widget.sentPage?.index ?? 0;
+    }
+    super.initState();
+  }
 
   void onTapBottomNavigationBarItem(int tapIndex) {
     setState(() {
