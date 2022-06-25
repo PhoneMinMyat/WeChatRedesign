@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: Center(child: pageList[pageIndex]),
       bottomNavigationBar: BottomNavigationBar(
+        
           elevation: 0,
           backgroundColor: Colors.grey[200],
           currentIndex: pageIndex,

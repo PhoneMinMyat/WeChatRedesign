@@ -53,6 +53,7 @@ class WeChatModelImpl extends WeChatModel {
           isFileTypeVideo: isVideo,
           profilePicUrl: user.profilePictureUrl,
           userName: user.userName,
+
           userId: user.id);
 
       return Future.value(tempMoment);
@@ -145,8 +146,17 @@ class WeChatModelImpl extends WeChatModel {
   }
   
   @override
-  Future<void> deleteMessage(String userId, String receiverId) {
-    return dataAgent.deleteMessage(userId, receiverId);
+  Future<void> deleteMessage(String userId, String receiverId, bool isDeleteForAllUsers) {
+    return dataAgent.deleteMessage(userId, receiverId, isDeleteForAllUsers);
+  }
+  
+  @override
+  Future<void> updateUserBio(String newBioText) {
+   return authenticationModel.getLoggedInUser().then((loggedInUser){
+    UserVO tempUser = loggedInUser;
+    tempUser.bioText = newBioText;
+    dataAgent.updateUserBioText(tempUser);
+   });
   }
  
 }

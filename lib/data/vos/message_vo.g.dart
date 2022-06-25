@@ -17,6 +17,7 @@ MessageVO _$MessageVOFromJson(Map<String, dynamic> json) => MessageVO(
       receivedUserId: json['received_user_id'] as String?,
       receivedUserProfileUrl: json['received_user_profile_url'] as String?,
       receivedUserName: json['received_user_name'] as String?,
+      isUserMessage: json['isUserMessage'] as bool?,
     );
 
 Map<String, dynamic> _$MessageVOToJson(MessageVO instance) => <String, dynamic>{
@@ -30,4 +31,5 @@ Map<String, dynamic> _$MessageVOToJson(MessageVO instance) => <String, dynamic>{
       'received_user_id': instance.receivedUserId,
       'received_user_profile_url': instance.receivedUserProfileUrl,
       'received_user_name': instance.receivedUserName,
+      'isUserMessage': instance.isUserMessage,
     };

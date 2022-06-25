@@ -8,6 +8,7 @@ import 'package:wechat_redesign/pages/registration_pages/welcome_page.dart';
 import 'package:wechat_redesign/resources/colors.dart';
 import 'package:wechat_redesign/resources/dimens.dart';
 import 'package:wechat_redesign/resources/strings.dart';
+import 'package:wechat_redesign/viewitems/primary_button.dart';
 import 'package:wechat_redesign/widgets/icon_and_label_section_view.dart';
 import 'package:wechat_redesign/widgets/separator_view.dart';
 
@@ -23,20 +24,93 @@ class ProfileView extends StatelessWidget {
             ? const CircularProgressIndicator(
                 color: kPrimaryGreenColor,
               )
-            : Column(
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).viewPadding.top,
-                    color: kPrimaryGreenColor,
+            : Stack(children: [
+                Positioned.fill(
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                          maxHeight: MediaQuery.of(context).size.height -
+                              MediaQuery.of(context).padding.top -32),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).viewPadding.top,
+                            color: kPrimaryGreenColor,
+                          ),
+                          const TopUserView(),
+                          const ButtonGroupSectionView(),
+                          SeparatorView(
+                            color: Colors.grey[400],
+                          ),
+                          const LogOutButtonView()
+                        ],
+                      ),
+                    ),
                   ),
-                  const TopUserView(),
-                  const ButtonGroupSectionView(),
-                  SeparatorView(
-                    color: Colors.grey[400],
-                  ),
-                  const LogOutButtonView()
-                ],
-              ),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Visibility(
+                      visible: bloc.isAddNewBioPopUpShow,
+                      child: const AddNewBioView()),
+                )
+              ]),
+      ),
+    );
+  }
+}
+
+class AddNewBioView extends StatelessWidget {
+  const AddNewBioView({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<ProfileBloc>(
+      builder: (context, bloc, child) => Container(
+        width: 300,
+        padding: const EdgeInsets.symmetric(
+            horizontal: kMarginXLarge, vertical: kMarginLarge),
+        decoration: BoxDecoration(
+            color: kPrimaryGreenColor,
+            borderRadius: BorderRadius.circular(kMarginLarge)),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              bloc.addNewBioTitle,
+              style:
+                  const TextStyle(color: Colors.white, fontSize: kTextHeading),
+            ),
+            TextField(
+              onChanged: (newValue) {
+                bloc.onChangedBio(newValue);
+              },
+              style: const TextStyle(color: Colors.white),
+            ),
+            const SizedBox(
+              height: kMarginMedium2,
+            ),
+            PrimaryButton(
+              onTap: () {
+                bloc.onTapBioAccept();
+              },
+              text: bloc.newBioButtonText,
+              isGreen: false,
+            ),
+            const SizedBox(
+              height: kMarginMedium2,
+            ),
+            PrimaryButton(
+              onTap: () {
+                bloc.hideBioPopUp();
+              },
+              text: kLblCancel,
+            )
+          ],
+        ),
       ),
     );
   }
@@ -201,16 +275,19 @@ class TopUserView extends StatelessWidget {
               child: RichText(
                 text: TextSpan(children: [
                   TextSpan(
-                    text: 'SQUR',
+                    text: bloc.loggedInProfile?.bioText ?? '',
                     style: const TextStyle(color: Colors.black54),
                   ),
                   const TextSpan(text: '\t\t'),
                   TextSpan(
-                      text: 'Edit',
+                      text: (bloc.loggedInProfile?.bioText?.isEmpty ?? true)
+                          ? 'Add New Bio'
+                          : 'Edit',
                       style: const TextStyle(color: kBlueColor),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
-                          print('Edit');
+                          print('onTap');
+                          bloc.showBioPopUp();
                         })
                 ]),
               ),

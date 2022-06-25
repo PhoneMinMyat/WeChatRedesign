@@ -49,23 +49,28 @@ class ChatBloc extends ChangeNotifier {
       model
           .getMessageList(loggedInUser.id ?? '', friendId)
           .listen((messageList) {
-        this.messageList = messageList.map((message) {
-          MessageVO tempMessage = message;
-          tempMessage.isUserMessage = (message.sentUserId == loggedInUser.id);
-          return tempMessage;
-        }).toList().reversed.toList();
+        this.messageList = messageList
+            .map((message) {
+              MessageVO tempMessage = message;
+              tempMessage.isUserMessage =
+                  (message.sentUserId == loggedInUser.id);
+              return tempMessage;
+            })
+            .toList()
+            .reversed
+            .toList();
         safeNotifyListeners();
       });
     });
   }
 
-  void onTapImage(String fileUrl){
+  void onTapImage(String fileUrl) {
     isShowDetails = true;
     fileUrlForShowDetail = fileUrl;
     safeNotifyListeners();
   }
 
-  void closeDetails(){
+  void closeDetails() {
     isShowDetails = false;
     fileUrlForShowDetail = NETWORK_PROFILE_PLACEHOLDER;
     safeNotifyListeners();
@@ -77,14 +82,15 @@ class ChatBloc extends ChangeNotifier {
 
   void onSubmitted(String newValue) {
     if (message.isNotEmpty || chosenFile != null) {
+      _makeLoading();
       model
           .sentMessage(message, chosenFile, isFileTypeVideo, friendId)
           .then((value) {
         chosenFile = null;
         message = '';
         safeNotifyListeners();
-      });
-    }else{
+      }).whenComplete(() => _cancelLoading());
+    } else {
       print('Not Sent');
     }
   }
@@ -140,6 +146,16 @@ class ChatBloc extends ChangeNotifier {
     if (!isDisposed) {
       notifyListeners();
     }
+  }
+
+  void _makeLoading() {
+    isLoading = true;
+    safeNotifyListeners();
+  }
+
+  void _cancelLoading() {
+    isLoading = false;
+    safeNotifyListeners();
   }
 
   @override

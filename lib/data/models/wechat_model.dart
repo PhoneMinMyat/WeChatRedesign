@@ -14,11 +14,13 @@ abstract class WeChatModel {
   Future<UserVO> getUserById(String userId);
   Future<void> addContact(String sentUserId, String receiveId);
 
+  Future<void> updateUserBio(String newBioText);
+
   Stream<List<UserVO>> getContactList(String userId);
 
   //Contact
   Future<void> sentMessage(String message, File? file, bool isVideo, String receivedUserId);
   Stream<List<MessageVO>> getMessageList(String userId, String receivedUserId);
   Stream<List<ConversationVO>> getConversationList(String userId);
-  Future<void> deleteMessage(String userId, String receiverId);
+  Future<void> deleteMessage(String userId, String receiverId, bool isDeleteForAllUsers);
 }

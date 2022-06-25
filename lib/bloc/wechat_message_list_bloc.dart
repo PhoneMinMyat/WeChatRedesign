@@ -11,6 +11,9 @@ class WeChatMessageBloc extends ChangeNotifier {
   bool isDisposed = false;
   List<ConversationVO>? conversationList;
   String loggedInUserId = '';
+  bool deleteForAllUsers = false;
+  bool isConfirmDialogShow = false;
+  String? selectUserIdToDelete;
 
   WeChatDataAgent dataAgent = WeChatDataAgentImpl();
   WeChatModel model = WeChatModelImpl();
@@ -21,19 +24,51 @@ class WeChatMessageBloc extends ChangeNotifier {
       loggedInUserId = user.id ?? '';
       model.getConversationList(user.id ?? '').listen((conversationList) {
         this.conversationList = conversationList;
-        this.conversationList?.sort((a, b) {
-           return b.lastMessageTimeStamp?.compareTo(a.lastMessageTimeStamp?.toInt() ?? 0) ?? -1;
-        },);
+        this.conversationList?.sort(
+          (a, b) {
+            return b.lastMessageTimeStamp
+                    ?.compareTo(a.lastMessageTimeStamp?.toInt() ?? 0) ??
+                -1;
+          },
+        );
         safeNotifyListeners();
       });
       //dataAgent.getTestConverstaionList(loggedInUserId);
     });
   }
 
-  Future<void> onTapDelete(String friendId) {
-    return model
-        .deleteMessage(loggedInUserId, friendId)
-        .then((value) => safeNotifyListeners());
+  Future<void> onTapDelete() {
+    if (selectUserIdToDelete != null) {
+      return model
+          .deleteMessage(
+              loggedInUserId, selectUserIdToDelete ?? '', deleteForAllUsers)
+          .then((value){
+            hideConfirmDialog();
+            deleteForAllUsers= false;
+            safeNotifyListeners();
+          });
+    } else {
+      return Future.error('error');
+    }
+  }
+
+  void onTapCheckBox(newValue) {
+    print('NewValue ===> $newValue');
+    deleteForAllUsers = newValue;
+    safeNotifyListeners();
+  }
+
+  void showConfirmDialog(String selectUserId) {
+    selectUserIdToDelete = selectUserId;
+    print('SelectUserId ====> $selectUserIdToDelete');
+    isConfirmDialogShow = true;
+    safeNotifyListeners();
+  }
+
+  void hideConfirmDialog() {
+    selectUserIdToDelete = null;
+    isConfirmDialogShow = false;
+    safeNotifyListeners();
   }
 
   void safeNotifyListeners() {

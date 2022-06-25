@@ -94,3 +94,11 @@ const kLblVideoCall = 'Video Call';
 const kLblLuckMoney = 'Luck Money';
 const kLblTransfer = 'Transfer';
 const kLblLocation = 'Location';
+
+const kLblSending = 'SENDING';
+
+const kLblAskConfirm = 'Confirm?';
+const kLblConfirm = 'Confirm';
+const kLblMessageDeleteConfirmText = 'Delete This Conversation?';
+
+const kLblAddFriend = 'Add Friend';

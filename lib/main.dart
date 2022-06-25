@@ -23,6 +23,7 @@ class MyApp extends StatelessWidget {
     final AuthenticationModel authenticationModel = AuthenticationModelImpl();
 
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),

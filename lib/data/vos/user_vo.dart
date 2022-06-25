@@ -25,6 +25,9 @@ class UserVO {
   @JsonKey(name: 'fcm_token')
   String? fcmToken;
 
+  @JsonKey(name: 'bio_text')
+  String? bioText;
+
   UserVO({
     this.id,
     this.email,
@@ -33,6 +36,7 @@ class UserVO {
     this.profilePictureUrl,
     this.phoneNumber,
     this.fcmToken,
+    this.bioText,
   });
 
   factory UserVO.fromJson(Map<String, dynamic> json) => _$UserVOFromJson(json);
@@ -40,6 +44,7 @@ class UserVO {
   Map<String, dynamic> toJson() => _$UserVOToJson(this);
 
   
+
 
   @override
   bool operator ==(Object other) {
@@ -52,7 +57,8 @@ class UserVO {
       other.password == password &&
       other.profilePictureUrl == profilePictureUrl &&
       other.phoneNumber == phoneNumber &&
-      other.fcmToken == fcmToken;
+      other.fcmToken == fcmToken &&
+      other.bioText == bioText;
   }
 
   @override
@@ -63,11 +69,12 @@ class UserVO {
       password.hashCode ^
       profilePictureUrl.hashCode ^
       phoneNumber.hashCode ^
-      fcmToken.hashCode;
+      fcmToken.hashCode ^
+      bioText.hashCode;
   }
 
   @override
   String toString() {
-    return 'UserVO(id: $id, email: $email, userName: $userName, password: $password, profilePictureUrl: $profilePictureUrl, phoneNumber: $phoneNumber, fcmToken: $fcmToken)';
+    return 'UserVO(id: $id, email: $email, userName: $userName, password: $password, profilePictureUrl: $profilePictureUrl, phoneNumber: $phoneNumber, fcmToken: $fcmToken, bioText: $bioText)';
   }
 }

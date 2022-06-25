@@ -174,18 +174,21 @@ class WeChatDataAgentImpl extends WeChatDataAgent {
   }
 
   @override
-  Future<void> deleteMessage(String userId, String receiverId) {
+  Future<void> deleteMessage(
+      String userId, String receiverId, bool isDeleteForAllUsers) {
     return _firebaseDatabase
         .child(messageAndContactPath)
         .child(userId)
         .child(receiverId)
         .remove()
         .then((value) {
-      _firebaseDatabase
-          .child(messageAndContactPath)
-          .child(receiverId)
-          .child(userId)
-          .remove();
+      if (isDeleteForAllUsers) {
+        _firebaseDatabase
+            .child(messageAndContactPath)
+            .child(receiverId)
+            .child(userId)
+            .remove();
+      }
     });
   }
 
@@ -227,7 +230,7 @@ class WeChatDataAgentImpl extends WeChatDataAgent {
         }).toList();
       } else {
         List<ConversationVO> tempList = [];
-       return tempList;
+        return tempList;
       }
     });
     // return Stream.value(tempConversationList);
@@ -340,5 +343,10 @@ class WeChatDataAgentImpl extends WeChatDataAgent {
         print('Sent From Data Agent ===> ${message.toString()}');
       });
     });
+  }
+  
+  @override
+  Future<void> updateUserBioText(UserVO user) {
+    return addNewUser(user);
   }
 }

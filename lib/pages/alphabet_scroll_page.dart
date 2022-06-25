@@ -1,6 +1,8 @@
 import 'package:azlistview/azlistview.dart';
 import 'package:flutter/material.dart';
+import 'package:wechat_redesign/pages/qr_scan_page.dart';
 import 'package:wechat_redesign/resources/colors.dart';
+import 'package:wechat_redesign/resources/dimens.dart';
 
 class _AZItem extends ISuspensionBean {
   final String title;
@@ -71,8 +73,24 @@ class _AlphabetScrollPageState extends State<AlphabetScrollPage> {
         data: azItems,
         itemCount: items.length,
         itemBuilder: (context, index) {
-          return ListItemView(
-            item: azItems[index],
+          return GestureDetector(
+            onTap: (){
+              showDialog(
+                      context: context,
+                      builder: (context) {
+                        return Dialog(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(kMarginMedium3),
+                          ),
+                          elevation: 0,
+                          backgroundColor: kBlackHoverColor,
+                          child: ContentBox(),
+                        );
+                      });
+            },
+            child: ListItemView(
+              item: azItems[index],
+            ),
           );
         },
         indexBarData: SuspensionUtil.getTagIndexList(azItems),

@@ -15,6 +15,7 @@ import 'package:wechat_redesign/resources/strings.dart';
 import 'package:wechat_redesign/viewitems/custom_appbar_view.dart';
 import 'package:wechat_redesign/viewitems/message_view.dart';
 import 'package:wechat_redesign/widgets/icon_and_label_section_view.dart';
+import 'package:wechat_redesign/widgets/loading_view.dart';
 import 'package:wechat_redesign/widgets/space_for_app_bar.dart';
 
 class ChatPage extends StatelessWidget {
@@ -104,7 +105,10 @@ class ChatPage extends StatelessWidget {
                     children: [
                       SizedBox(
                           width: double.infinity,
-                          child: Image.network(bloc.fileUrlForShowDetail, fit: BoxFit.cover,)),
+                          child: Image.network(
+                            bloc.fileUrlForShowDetail,
+                            fit: BoxFit.cover,
+                          )),
                       GestureDetector(
                         onTap: () {
                           bloc.closeDetails();
@@ -142,6 +146,7 @@ class MessageInputSectionView extends StatelessWidget {
                 ? 210
                 : 60,
         child: SingleChildScrollView(
+          physics: const NeverScrollableScrollPhysics(),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: const [
@@ -167,7 +172,10 @@ class ChoseFileSectionView extends StatelessWidget {
       builder: (context, bloc, child) => (bloc.chosenFile == null)
           ? Container()
           : Container(
-              color: Colors.white,
+              decoration: const BoxDecoration(
+                  color: Colors.white,
+                  border: Border.symmetric(
+                      horizontal: BorderSide(color: Colors.grey, width: 0.5))),
               height: 150,
               child: Stack(
                 children: [
@@ -175,19 +183,55 @@ class ChoseFileSectionView extends StatelessWidget {
                   Align(
                     alignment: Alignment.centerRight,
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: kMarginMedium2),
-                      child: SizedBox(
-                        width: 200,
-                        height: 120,
-                        child: (bloc.chosenFile != null && bloc.isFileTypeVideo)
-                            ? Chewie(controller: bloc.chewieController!)
-                            : Image.file(
-                                bloc.chosenFile!,
-                                fit: BoxFit.cover,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: kMarginMedium2),
+                        child: SizedBox(
+                          width: 200,
+                          height: 120,
+                          child: Stack(
+                            children: [
+                              Positioned.fill(
+                                child: SizedBox(
+                                  child: (bloc.chosenFile != null &&
+                                          bloc.isFileTypeVideo)
+                                      ? Chewie(
+                                          controller: bloc.chewieController!)
+                                      : Image.file(
+                                          bloc.chosenFile!,
+                                          fit: BoxFit.cover,
+                                        ),
+                                ),
                               ),
-                      ),
-                    ),
+                              Align(
+                                alignment: Alignment.center,
+                                child: Visibility(
+                                     visible: bloc.isLoading,
+                                    child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const LoadingView(
+                                      isTransparentColor: true,
+                                    ),
+                                    const SizedBox(height: kMarginMedium),
+                                    Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: kMarginSmall,
+                                        ),
+                                        decoration: BoxDecoration(
+                                            color: Colors.white,
+                                            borderRadius: BorderRadius.circular(
+                                                kMarginMedium)),
+                                        child: const Text(
+                                          kLblSending,
+                                          style: TextStyle(
+                                              color: kPrimaryGreenColor),
+                                        ))
+                                  ],
+                                )),
+                              )
+                            ],
+                          ),
+                        )),
                   ),
                   Align(
                     alignment: Alignment.topRight,
@@ -203,7 +247,7 @@ class ChoseFileSectionView extends StatelessWidget {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               )),
     );
@@ -316,6 +360,9 @@ class TextInputSectionView extends StatelessWidget {
                 child: TextField(
                   onChanged: (value) {
                     bloc.onChangedMessage(value);
+                  },
+                  onTap: (){
+                    bloc.makeAtachmentViewShrink();
                   },
                   onSubmitted: (value) {
                     bloc.onSubmitted(value);
